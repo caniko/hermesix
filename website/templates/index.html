@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero">
+  <div class="hero-inner">
+    <p class="eyebrow">{{ section.extra.tagline }}</p>
+    <h1>{{ section.title }}</h1>
+    <p class="subtitle">{{ section.extra.subtitle }}</p>
+    <div class="actions">
+      <a class="button primary" href="{{ config.base_url }}/docs/">Get started</a>
+      <a class="button secondary" href="https://codeberg.org/caniko/hermesix">View source</a>
+    </div>
+  </div>
+</section>
+
+<section class="features">
+  <div class="section-heading">
+    <h2>Built for managed config</h2>
+    <p>Small commands, explicit manifests, and conservative writes.</p>
+  </div>
+  <div class="feature-grid">
+    {% for feature in section.extra.features %}
+      <article class="feature-card">
+        <h3>{{ feature.title }}</h3>
+        <p>{{ feature.description }}</p>
+      </article>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="install">
+  <h2>Quick install</h2>
+  <pre><code>nix run codeberg:caniko/hermesix -- --help</code></pre>
+  <pre><code>cargo install --git https://codeberg.org/caniko/hermesix</code></pre>
+</section>
+{% endblock content %}

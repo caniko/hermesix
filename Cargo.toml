@@ -1,0 +1,32 @@
+[package]
+name = "hermesix"
+version = "0.1.0"
+edition = "2021"
+description = "Home Manager managed configuration utilities"
+repository = "https://codeberg.org/caniko/hermesix"
+homepage = "https://caniko.codeberg.page/hermesix"
+documentation = "https://caniko.codeberg.page/hermesix/docs/"
+readme = "README.md"
+license = "MIT"
+keywords = ["home-manager", "nix", "config", "obs", "cli"]
+categories = ["command-line-utilities", "config"]
+include = [
+  "Cargo.toml",
+  "Cargo.lock",
+  "LICENSE",
+  "README.md",
+  "plugin-schemas/**",
+  "src/**",
+]
+
+[[bin]]
+name = "hermesix"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+hex = "0.4"
+miette = { version = "7", features = ["fancy"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
