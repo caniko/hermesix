@@ -1,4 +1,4 @@
-use clap::{Args, Parser, Subcommand, ValueEnum};
+use clap::{error::ErrorKind, Args, Parser, Subcommand, ValueEnum};
 use miette::{bail, miette, Context, IntoDiagnostic, Result};
 use serde::{Deserialize, Serialize};
 use serde_json::{Map, Value};
@@ -248,8 +248,13 @@ fn main() {
     let cli = match Cli::try_parse_from(args) {
         Ok(cli) => cli,
         Err(err) => {
+            let code = if matches!(err.kind(), ErrorKind::DisplayHelp | ErrorKind::DisplayVersion) {
+                0
+            } else {
+                2
+            };
             let _ = err.print();
-            std::process::exit(2);
+            std::process::exit(code);
         }
     };
 

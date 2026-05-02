@@ -4,7 +4,11 @@
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
   outputs =
-    { nixpkgs, ... }:
+    {
+      self,
+      nixpkgs,
+      ...
+    }:
     let
       systems = [
         "aarch64-darwin"
@@ -92,6 +96,11 @@
       checks = forAllSystems (system: {
         hermesix = nixpkgs.legacyPackages.${system}.callPackage ./package.nix { };
       });
+
+      homeManagerModules = rec {
+        obs-studio = import ./modules/home-manager/obs-studio.nix { inherit self; };
+        default = obs-studio;
+      };
 
       devShells = forAllSystems (
         system:
