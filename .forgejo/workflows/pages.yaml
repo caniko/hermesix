@@ -1,6 +1,8 @@
+---
+# yamllint disable rule:line-length
 name: Publish Pages
 
-on:
+"on":
   push:
     branches: [main]
 

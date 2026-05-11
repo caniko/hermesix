@@ -1,10 +1,27 @@
 {
-  description = "Home Manager managed configuration utilities";
+  description = "Generic managed configuration utilities";
 
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+  inputs = {
+    rs-harbor.url = "git+https://codeberg.org/caniko/rs-harbor.git";
+
+    nixpkgs.follows = "rs-harbor/nixpkgs";
+    rust-overlay.follows = "rs-harbor/rust-overlay";
+    crane.follows = "rs-harbor/crane";
+    flake-utils.follows = "rs-harbor/flake-utils";
+    advisory-db = {
+      url = "github:rustsec/advisory-db";
+      flake = false;
+    };
+  };
 
   outputs =
-    { nixpkgs, ... }:
+    {
+      advisory-db,
+      nixpkgs,
+      rs-harbor,
+      rust-overlay,
+      ...
+    }:
     let
       systems = [
         "aarch64-darwin"
@@ -12,19 +29,113 @@
         "x86_64-darwin"
         "x86_64-linux"
       ];
-      forAllSystems = nixpkgs.lib.genAttrs systems;
-    in
-    {
-      packages = forAllSystems (
+      lib = nixpkgs.lib;
+      forAllSystems = lib.genAttrs systems;
+
+      perSystem = forAllSystems (
         system:
         let
-          pkgs = nixpkgs.legacyPackages.${system};
-          lib = pkgs.lib;
-          hermesix = pkgs.callPackage ./package.nix { };
+          pkgs = import nixpkgs {
+            inherit system;
+            overlays = [ (import rust-overlay) ];
+          };
+          toolchain = rs-harbor.lib.mkToolchain { inherit pkgs; };
+          inherit (toolchain) craneLib;
+          version = "0.1.0";
+
+          cargoSrc = lib.fileset.toSource {
+            root = ./.;
+            fileset = lib.fileset.unions [
+              ./Cargo.toml
+              ./Cargo.lock
+              ./deny.toml
+              ./LICENSE
+              ./README.md
+              ./plugin-schemas
+              ./src
+            ];
+          };
+
+          commonArgs = {
+            pname = "hermesix";
+            inherit version;
+            src = cargoSrc;
+            strictDeps = true;
+            cargoExtraArgs = "--all-features";
+          };
+
+          cargoArtifacts = craneLib.buildDepsOnly commonArgs;
+
+          hermesix = craneLib.buildPackage (
+            commonArgs
+            // {
+              inherit cargoArtifacts;
+
+              meta = {
+                description = "Generic managed configuration utilities";
+                homepage = "https://codeberg.org/caniko/hermesix";
+                mainProgram = "hermesix";
+                license = lib.licenses.mit;
+                platforms = lib.platforms.unix;
+              };
+            }
+          );
+
+          clippyCheck = craneLib.cargoClippy (
+            commonArgs
+            // {
+              inherit cargoArtifacts;
+              cargoClippyExtraArgs = "--all-targets -- --deny warnings";
+            }
+          );
+
+          fmtCheck = craneLib.cargoFmt { src = cargoSrc; };
+
+          nextestCheck = craneLib.cargoNextest (
+            commonArgs
+            // {
+              inherit cargoArtifacts;
+            }
+          );
+
+          docCheck = craneLib.cargoDoc (
+            commonArgs
+            // {
+              inherit cargoArtifacts;
+              cargoDocExtraArgs = "--no-deps";
+            }
+          );
+
+          auditCheck = craneLib.cargoAudit {
+            inherit advisory-db;
+            src = cargoSrc;
+          };
+
+          denyCheck = craneLib.cargoDeny {
+            src = cargoSrc;
+          };
+
+          projectChecks = {
+            default = hermesix;
+            hermesix = hermesix;
+            hermesix-deps = cargoArtifacts;
+            hermesix-clippy = clippyCheck;
+            hermesix-fmt = fmtCheck;
+            hermesix-nextest = nextestCheck;
+            hermesix-doc = docCheck;
+            hermesix-audit = auditCheck;
+            hermesix-deny = denyCheck;
+            clippy = clippyCheck;
+            fmt = fmtCheck;
+            nextest = nextestCheck;
+            doc = docCheck;
+            audit = auditCheck;
+            deny = denyCheck;
+          };
 
           website = pkgs.stdenv.mkDerivation {
             pname = "hermesix-website";
-            version = "0.1.0";
+            inherit version;
             src = lib.fileset.toSource {
               root = ./.;
               fileset = lib.fileset.maybeMissing ./website;
@@ -46,7 +157,7 @@
 
           docs = pkgs.stdenv.mkDerivation {
             pname = "hermesix-docs";
-            version = "0.1.0";
+            inherit version;
             src = lib.fileset.toSource {
               root = ./.;
               fileset = lib.fileset.maybeMissing ./docs;
@@ -68,47 +179,43 @@
           '';
         in
         {
-          inherit
-            docs
-            hermesix
-            site
-            website
-            ;
-          default = hermesix;
-        }
-      );
+          packages = {
+            inherit
+              docs
+              hermesix
+              site
+              website
+              ;
+            default = hermesix;
+          };
 
-      apps = forAllSystems (system: {
-        default = {
-          type = "app";
-          program = "${nixpkgs.legacyPackages.${system}.callPackage ./package.nix { }}/bin/hermesix";
-        };
-        hermesix = {
-          type = "app";
-          program = "${nixpkgs.legacyPackages.${system}.callPackage ./package.nix { }}/bin/hermesix";
-        };
-      });
+          apps = {
+            default = {
+              type = "app";
+              program = lib.getExe hermesix;
+              meta.description = "Run Hermesix";
+            };
+            hermesix = {
+              type = "app";
+              program = lib.getExe hermesix;
+              meta.description = "Run Hermesix";
+            };
+          };
 
-      checks = forAllSystems (system: {
-        hermesix = nixpkgs.legacyPackages.${system}.callPackage ./package.nix { };
-      });
+          checks = projectChecks;
 
-      devShells = forAllSystems (
-        system:
-        let
-          pkgs = nixpkgs.legacyPackages.${system};
-        in
-        {
-          default = pkgs.mkShell {
+          devShells.default = craneLib.devShell {
+            checks = projectChecks;
+
             packages = [
-              pkgs.cargo
-              pkgs.clippy
-              pkgs.gcc
+              pkgs.cargo-audit
+              pkgs.cargo-deny
+              pkgs.cargo-nextest
               pkgs.mdbook
-              pkgs.rustc
-              pkgs.rustfmt
+              pkgs.rust-analyzer
               pkgs.zola
             ];
+
             shellHook = ''
               echo "Website: cd website && zola serve"
               echo "Documentation: cd docs && mdbook serve"
@@ -117,5 +224,11 @@
           };
         }
       );
+    in
+    {
+      packages = lib.mapAttrs (_: value: value.packages) perSystem;
+      apps = lib.mapAttrs (_: value: value.apps) perSystem;
+      checks = lib.mapAttrs (_: value: value.checks) perSystem;
+      devShells = lib.mapAttrs (_: value: value.devShells) perSystem;
     };
 }
