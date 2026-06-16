@@ -1,0 +1,46 @@
+[site]
+title = "Hermesix"
+description = "Hermesix is a generic command line tool for managed configuration workflows."
+base_url = "/"
+footer_note = "Generated from repository metadata by the plinth-project FOSS sweep."
+
+[[nav]]
+label = "Overview"
+href = "#overview"
+
+[[nav]]
+label = "Source"
+href = "ssh://git@codeberg.org/caniko/hermesix.git"
+
+[[footer_links]]
+label = "Source"
+href = "ssh://git@codeberg.org/caniko/hermesix.git"
+
+[[pages]]
+slug = "index"
+title = "Hermesix"
+description = "Hermesix is a generic command line tool for managed configuration workflows."
+
+[[pages.sections]]
+type = "hero"
+title = "Hermesix"
+tagline = "Hermesix is a generic command line tool for managed configuration workflows."
+subtitle = "Hermesix is a generic command line tool for managed configuration workflows."
+
+[[pages.sections.ctas]]
+label = "View source"
+href = "ssh://git@codeberg.org/caniko/hermesix.git"
+primary = true
+
+[[pages.sections]]
+type = "feature_grid"
+id = "overview"
+
+[[pages.sections.features]]
+title = "Rust"
+description = "Project technology detected from repository manifests."
+
+[[pages.sections.features]]
+title = "Nix"
+description = "Project technology detected from repository manifests."
+

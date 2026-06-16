@@ -1,6 +1,6 @@
 base_url = "https://caniko.codeberg.page/hermesix"
 title = "Hermesix"
-description = "Home Manager managed configuration utilities"
+description = "Generic managed configuration utilities"
 default_language = "en"
 
 compile_sass = true

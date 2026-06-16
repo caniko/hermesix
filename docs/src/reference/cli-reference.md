@@ -19,16 +19,13 @@ kinds, and portable configuration policy.
 
 `redact` prints a sanitized copy of a JSON, INI, or raw file.
 
-## OBS Commands
+## Adapter Commands
 
 ```sh
-hermesix obs export-to-nix [CONFIG_DIR]
-hermesix obs plugin-inspect --source-dir DIR
-hermesix obs plugin-inspect verify --evidence FILE --source-dir DIR
+hermesix adapter obs export-to-nix [CONFIG_DIR]
+hermesix adapter obs plugin-inspect --source-dir DIR
+hermesix adapter obs plugin-inspect verify --evidence FILE --source-dir DIR
 ```
 
-The Nix package also installs compatibility command names:
-
-- `hm-managed-config`
-- `obs-studio-sync`
-- `obs-studio-export-to-nix`
+OBS Studio is the first adapter. The Nix package installs only the `hermesix`
+binary.

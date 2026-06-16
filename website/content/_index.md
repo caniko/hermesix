@@ -3,7 +3,7 @@ title = "Hermesix"
 
 [extra]
 tagline = "Managed configuration, carried safely."
-subtitle = "Hermesix gives Home Manager modules a small, hash-checked CLI for diffing, syncing, validating, and redacting generated configuration files."
+subtitle = "Hermesix gives managed configuration producers a small, hash-checked CLI for diffing, syncing, validating, and redacting generated files."
 
 [[extra.features]]
 title = "Manifest diff and sync"
@@ -22,14 +22,10 @@ title = "Redaction"
 description = "Remove sensitive fields, runtime state, and machine-local paths from JSON and INI files."
 
 [[extra.features]]
-title = "OBS export"
-description = "Export existing OBS Studio profiles, scene collections, and plugin configuration into Nix-friendly output."
+title = "Adapter namespace"
+description = "Keep application-specific helpers outside the generic managed-configuration core."
 
 [[extra.features]]
-title = "Plugin inspection"
-description = "Scan OBS plugin source trees for source IDs, registrations, defaults, and property settings."
-
-[[extra.features]]
-title = "Compatibility aliases"
-description = "Keep existing Home Manager and OBS command names while exposing the Hermesix CLI."
+title = "OBS adapter"
+description = "Export OBS Studio profiles, scene collections, and plugin configuration, and inspect OBS plugin source trees."
 +++

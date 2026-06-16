@@ -6,7 +6,7 @@ case was a Home Manager OBS module.
 Export an existing OBS configuration:
 
 ```sh
-hermesix obs export-to-nix ~/.config/obs-studio
+hermesix adapter obs export-to-nix ~/.config/obs-studio
 ```
 
 The exporter reads common OBS files such as `global.ini`, `user.ini`, profile
@@ -17,7 +17,7 @@ configuration.
 Inspect an OBS plugin source tree:
 
 ```sh
-hermesix obs plugin-inspect --source-dir ./my-plugin
+hermesix adapter obs plugin-inspect --source-dir ./my-plugin
 ```
 
 The inspection command emits JSON evidence for OBS source IDs, filters,

@@ -2,13 +2,13 @@
 name = "hermesix"
 version = "0.1.0"
 edition = "2021"
-description = "Home Manager managed configuration utilities"
+description = "Generic managed configuration utilities"
 repository = "https://codeberg.org/caniko/hermesix"
 homepage = "https://caniko.codeberg.page/hermesix"
 documentation = "https://caniko.codeberg.page/hermesix/docs/"
 readme = "README.md"
 license = "MIT"
-keywords = ["home-manager", "nix", "config", "obs", "cli"]
+keywords = ["home-manager", "nix", "config", "adapter", "cli"]
 categories = ["command-line-utilities", "config"]
 include = [
   "Cargo.toml",

@@ -16,8 +16,9 @@ requests.
 Home Manager modules that generate a Hermesix manifest should write JSON with:
 
 - `version = 1`
-- a non-empty `module` identifier such as `programs.obs-studio`
+- a non-empty `module` identifier such as `programs.example`
 - `files[]` entries with safe relative paths and source hashes
 
-The OBS module writes managed files under `$XDG_CONFIG_HOME/obs-studio` and a
-manifest under Home Manager state.
+Application modules choose the managed configuration root and write a manifest
+under Home Manager state. The OBS module is one current producer of this
+generic manifest format.

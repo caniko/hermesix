@@ -19,4 +19,4 @@ Use these flags when you intentionally want to keep those values:
 ```
 
 The same redaction flags are used by `hermesix redact`, `hermesix validate`,
-and `hermesix obs export-to-nix`.
+and `hermesix adapter obs export-to-nix`.

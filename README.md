@@ -1,9 +1,13 @@
 # Hermesix
 
-Hermesix is a command line tool for Home Manager managed configuration
-workflows. It can diff, sync, validate, and redact files described by a
-versioned manifest, and it includes OBS Studio adapters for exporting existing
-OBS configuration and inspecting plugin source trees.
+<!-- simit:badges:start -->
+[![CI](https://img.shields.io/badge/CI-drift-2088ff)](.forgejo/workflows/ci.yaml) [![Nix](https://img.shields.io/badge/Nix-managed-5277c3)](flake.nix) [![docs](https://img.shields.io/badge/docs-enabled-6f42c1)](docs) [![crates.io](https://img.shields.io/badge/crates.io-ready-f46623)](https://crates.io/crates/hermesix)
+<!-- simit:badges:end -->
+
+Hermesix is a generic command line tool for managed configuration workflows.
+It can diff, sync, validate, and redact files described by a versioned
+manifest. Application-specific helpers live under adapters; OBS Studio is the
+first adapter.
 
 ## Install
 
@@ -26,12 +30,9 @@ hermesix diff --manifest manifest.json --config-dir "$XDG_CONFIG_HOME/example"
 hermesix sync --manifest manifest.json --config-dir "$XDG_CONFIG_HOME/example" --apply
 hermesix validate --manifest manifest.json --config-dir "$XDG_CONFIG_HOME/example"
 hermesix redact config.json --format json
-hermesix obs export-to-nix ~/.config/obs-studio
-hermesix obs plugin-inspect --source-dir ./plugin
+hermesix adapter obs export-to-nix ~/.config/obs-studio
+hermesix adapter obs plugin-inspect --source-dir ./plugin
 ```
-
-Compatibility command names are also installed by the Nix package:
-`hm-managed-config`, `obs-studio-sync`, and `obs-studio-export-to-nix`.
 
 ## Documentation
 

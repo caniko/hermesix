@@ -12,12 +12,18 @@
       url = "github:rustsec/advisory-db";
       flake = false;
     };
+    plinth = {
+      url = "git+https://codeberg.org/caniko/plinth.git?ref=refs/heads/trunk";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
+    };
   };
 
   outputs =
     {
       advisory-db,
       nixpkgs,
+      plinth,
       rs-harbor,
       rust-overlay,
       ...
@@ -171,22 +177,28 @@
             '';
           };
 
-          site = pkgs.runCommand "hermesix-site" { } ''
-            mkdir -p $out
-            cp -r ${website}/* $out/
-            mkdir -p $out/docs
-            cp -r ${docs}/* $out/docs/
-          '';
+          projectSite = plinth.lib.${system}.mkProjectSite {
+            pname = "hermesix-website";
+            domain = "hermesix.tartanoglu.com";
+            configPath = ./website/plinth-project.toml;
+            staticPaths = [
+              {
+                source = website;
+                target = ".";
+              }
+            ];
+            docsPackage = docs;
+          };
         in
         {
           packages = {
             inherit
               docs
               hermesix
-              site
               website
               ;
             default = hermesix;
+            site = projectSite;
           };
 
           apps = {
@@ -199,6 +211,9 @@
               type = "app";
               program = lib.getExe hermesix;
               meta.description = "Run Hermesix";
+            };
+            deploy-pages = plinth.lib.${system}.mkDeployPagesApp {
+              domain = "hermesix.tartanoglu.com";
             };
           };
 
