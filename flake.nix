@@ -46,8 +46,10 @@
             overlays = [ (import rust-overlay) ];
           };
           toolchain = rs-harbor.lib.mkToolchain { inherit pkgs; };
+          cross = rs-harbor.lib.mkCross { inherit pkgs system; };
           inherit (toolchain) craneLib;
           version = "0.1.0";
+          plinthProject = plinth.packages.${system}.plinth-project;
 
           cargoSrc = lib.fileset.toSource {
             root = ./.;
@@ -219,23 +221,40 @@
 
           checks = projectChecks;
 
-          devShells.default = craneLib.devShell {
-            checks = projectChecks;
+          devShells = {
+            default = craneLib.devShell {
+              checks = projectChecks;
 
-            packages = [
-              pkgs.cargo-audit
-              pkgs.cargo-deny
-              pkgs.cargo-nextest
-              pkgs.mdbook
-              pkgs.rust-analyzer
-              pkgs.zola
-            ];
+              packages = [
+                pkgs.cargo-audit
+                pkgs.cargo-deny
+                pkgs.cargo-nextest
+                pkgs.mdbook
+                pkgs.rust-analyzer
+                pkgs.zola
+              ];
 
-            shellHook = ''
-              echo "Website: cd website && zola serve"
-              echo "Documentation: cd docs && mdbook serve"
-              echo "Release dry-run: cargo publish --dry-run"
-            '';
+              shellHook = ''
+                echo "Website: cd website && zola serve"
+                echo "Documentation: cd docs && mdbook serve"
+                echo "Release dry-run: cargo publish --dry-run"
+              '';
+            };
+
+            docs = rs-harbor.lib.mkDocsShell {
+              inherit pkgs cross;
+              inherit (toolchain) craneLib;
+              checks = projectChecks;
+              packages = [
+                pkgs.mdbook
+                plinthProject
+                pkgs.rust-analyzer
+              ];
+              extraShellHook = ''
+                echo "Project site: plinth-project serve --config website/plinth-project.toml"
+                echo "Documentation: mdbook serve docs"
+              '';
+            };
           };
         }
       );
