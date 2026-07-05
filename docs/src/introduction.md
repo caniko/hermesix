@@ -13,4 +13,22 @@ The CLI can:
 - run application-specific adapters, starting with OBS Studio export and plugin
   inspection helpers
 
+## Home Manager OBS integration
+
+Home Manager owns the declarative OBS Studio module. Hermesix can be layered on
+top as a separate flake module to install the companion CLI:
+
+```nix
+{
+  imports = [
+    inputs.hermesix.homeManagerModules.obs-studio
+  ];
+
+  programs.obs-studio.enable = true;
+}
+```
+
+The Home Manager module generates OBS configuration. Hermesix provides
+export/sync/diff/validate/redact tooling for users who want those workflows.
+
 Source code is hosted at <https://codeberg.org/caniko/hermesix>.

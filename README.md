@@ -17,6 +17,35 @@ With Nix:
 nix run codeberg:caniko/hermesix -- --help
 ```
 
+With Home Manager and the OBS Studio module:
+
+```nix
+{
+  inputs.hermesix.url = "git+https://codeberg.org/caniko/hermesix";
+
+  outputs =
+    {
+      home-manager,
+      hermesix,
+      ...
+    }:
+    {
+      homeConfigurations.example = home-manager.lib.homeManagerConfiguration {
+        modules = [
+          hermesix.homeManagerModules.obs-studio
+          {
+            programs.obs-studio.enable = true;
+          }
+        ];
+      };
+    };
+}
+```
+
+Home Manager provides the declarative OBS Studio configuration module. Hermesix
+provides the companion CLI, including export, sync, diff, validation, and
+redaction commands.
+
 From source:
 
 ```sh

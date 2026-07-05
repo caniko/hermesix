@@ -21,6 +21,7 @@
 
   outputs =
     {
+      self,
       advisory-db,
       nixpkgs,
       plinth,
@@ -264,5 +265,9 @@
       apps = lib.mapAttrs (_: value: value.apps) perSystem;
       checks = lib.mapAttrs (_: value: value.checks) perSystem;
       devShells = lib.mapAttrs (_: value: value.devShells) perSystem;
+      homeManagerModules = rec {
+        obs-studio = import ./modules/home-manager/obs-studio.nix { inherit self; };
+        default = obs-studio;
+      };
     };
 }

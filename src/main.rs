@@ -4,7 +4,7 @@ mod fsutil;
 mod nix;
 mod redaction;
 
-use clap::{Parser, Subcommand};
+use clap::{error::ErrorKind, Parser, Subcommand};
 use miette::Result;
 
 #[derive(Debug, Parser)]
@@ -31,8 +31,13 @@ fn main() {
     let cli = match Cli::try_parse() {
         Ok(cli) => cli,
         Err(err) => {
+            let code = if matches!(err.kind(), ErrorKind::DisplayHelp | ErrorKind::DisplayVersion) {
+                0
+            } else {
+                2
+            };
             let _ = err.print();
-            std::process::exit(2);
+            std::process::exit(code);
         }
     };
 
