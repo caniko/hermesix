@@ -61,7 +61,14 @@ hermesix validate --manifest manifest.json --config-dir "$XDG_CONFIG_HOME/exampl
 hermesix redact config.json --format json
 hermesix adapter obs export-to-nix ~/.config/obs-studio
 hermesix adapter obs plugin-inspect --source-dir ./plugin
+hermesix adapter goxlr capture --output-dir ./goxlr-capture --json
 ```
+
+The GoXLR adapter copies the live Utility XDG tree into a deterministic source
+tree and emits `goxlr-config-manifest.json`. It does not mutate the device or
+runtime files; pass that manifest to the `goxlr-config` plan/apply/verify
+commands supplied by the goxlr-nexus flake. This capture path is deterministic
+and usable from scripts or CI without an LLM.
 
 ## Documentation
 

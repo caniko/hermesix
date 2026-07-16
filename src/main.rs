@@ -110,4 +110,18 @@ mod tests {
         let result = Cli::try_parse_from(["hermesix", "obs", "export-to-nix"]);
         assert!(result.is_err());
     }
+
+    #[test]
+    fn parses_adapter_goxlr_capture() {
+        Cli::try_parse_from([
+            "hermesix",
+            "adapter",
+            "goxlr",
+            "capture",
+            "--output-dir",
+            "./goxlr-capture",
+            "--json",
+        ])
+        .expect("adapter GoXLR capture command should parse");
+    }
 }
