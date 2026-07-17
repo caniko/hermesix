@@ -7,7 +7,7 @@
     nixpkgs.follows = "rs-harbor/nixpkgs";
     rust-overlay.follows = "rs-harbor/rust-overlay";
     crane.follows = "rs-harbor/crane";
-    flake-utils.follows = "rs-harbor/flake-utils";
+    flake-utils.url = "github:numtide/flake-utils";
     advisory-db = {
       url = "github:rustsec/advisory-db";
       flake = false;
