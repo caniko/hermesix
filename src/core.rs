@@ -157,7 +157,7 @@ fn require_valid_manifest_shape(manifest: &Manifest, config_dir: &Path) -> Resul
         for err in errors {
             eprintln!("{err}");
         }
-        bail!("invalid manifest")
+        bail!("invalid manifest");
     }
 }
 
@@ -193,7 +193,9 @@ fn manifest_shape_errors(manifest: &Manifest, config_dir: &Path) -> Vec<String> 
 fn verify_source_hash(file: &ManifestFile) -> Result<()> {
     match sha256_file(&file.source) {
         Ok(hash) if hash == file.sha256 => Ok(()),
-        Ok(hash) => bail!("source sha256 mismatch: {hash}"),
+        Ok(hash) => {
+            bail!("source sha256 mismatch: {hash}");
+        }
         Err(err) => {
             Err(err).wrap_err_with(|| format!("cannot hash source {}", file.source.display()))
         }

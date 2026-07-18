@@ -225,8 +225,12 @@ fn exactly_one_dir(
 ) -> Result<PathBuf> {
     match (source_dir, install_dir) {
         (Some(path), None) | (None, Some(path)) => Ok(path),
-        (None, None) => bail!("{command} requires --source-dir or --install-dir"),
-        (Some(_), Some(_)) => bail!("{command} accepts only one of --source-dir or --install-dir"),
+        (None, None) => {
+            bail!("{command} requires --source-dir or --install-dir");
+        }
+        (Some(_), Some(_)) => {
+            bail!("{command} accepts only one of --source-dir or --install-dir");
+        }
     }
 }
 
