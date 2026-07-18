@@ -1,0 +1,47 @@
+{
+  "plugin-schemas/local-test-plugin.json": {
+    "mtime": 1777728363.1342597,
+    "ast_hash": "22837a06de0b3f6904429cee94b9b508",
+    "semantic_hash": "22837a06de0b3f6904429cee94b9b508"
+  },
+  "src/adapters/goxlr.rs": {
+    "mtime": 1784059146.9972796,
+    "ast_hash": "57585c6fc69c98c814673c533b3aa930",
+    "semantic_hash": "57585c6fc69c98c814673c533b3aa930"
+  },
+  "src/adapters/mod.rs": {
+    "mtime": 1784059141.7843006,
+    "ast_hash": "3ebd2da5bbddf887f7271c98a36ac922",
+    "semantic_hash": "3ebd2da5bbddf887f7271c98a36ac922"
+  },
+  "src/adapters/obs.rs": {
+    "mtime": 1784363687.721633,
+    "ast_hash": "c686f97cc05fb3b8ffd783e306958141",
+    "semantic_hash": "c686f97cc05fb3b8ffd783e306958141"
+  },
+  "src/core.rs": {
+    "mtime": 1784363687.7207012,
+    "ast_hash": "915c822c42a8eb36e4e77672bec2bf62",
+    "semantic_hash": "915c822c42a8eb36e4e77672bec2bf62"
+  },
+  "src/fsutil.rs": {
+    "mtime": 1781943018.0541868,
+    "ast_hash": "251059fae7b693829747295011b19848",
+    "semantic_hash": "251059fae7b693829747295011b19848"
+  },
+  "src/main.rs": {
+    "mtime": 1784059159.8682277,
+    "ast_hash": "b0f908cd44254f38dbdfcb32da29ecfc",
+    "semantic_hash": "b0f908cd44254f38dbdfcb32da29ecfc"
+  },
+  "src/nix.rs": {
+    "mtime": 1781943018.0541868,
+    "ast_hash": "7fb85a9dbd71bf6ef4781c53b8892496",
+    "semantic_hash": "7fb85a9dbd71bf6ef4781c53b8892496"
+  },
+  "src/redaction.rs": {
+    "mtime": 1781943018.0541868,
+    "ast_hash": "f887ee948b4cbe9c8dda40391117213d",
+    "semantic_hash": "f887ee948b4cbe9c8dda40391117213d"
+  }
+}
