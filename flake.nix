@@ -2,7 +2,7 @@
   description = "Generic managed configuration utilities";
 
   inputs = {
-    rs-harbor.url = "git+https://codeberg.org/caniko/rs-harbor.git?ref=trunk&rev=9bfa8bdb0ecb22d7bc11448665f7fbaebae7a759";
+    rs-harbor.url = "git+https://codeberg.org/caniko/rs-harbor.git?ref=trunk&rev=c26b735eede8078f795651c4a9cbf0be8733b221";
 
     nixpkgs.follows = "rs-harbor/nixpkgs";
     rust-overlay.follows = "rs-harbor/rust-overlay";
@@ -46,7 +46,7 @@
             inherit system;
             overlays = [ (import rust-overlay) ];
           };
-          toolchain = rs-harbor.lib.mkToolchain { inherit pkgs; };
+          toolchain = rs-harbor.lib.mkToolchain { inherit pkgs; toolchainProfile = "nightly"; };
           cross = rs-harbor.lib.mkCross { inherit pkgs system; };
           inherit (toolchain) craneLib;
           version = "0.1.0";
