@@ -10,11 +10,11 @@ href = "#overview"
 
 [[nav]]
 label = "Source"
-href = "ssh://git@codeberg.org/caniko/hermesix.git"
+href = "ssh://git@github.com/caniko/hermesix.git"
 
 [[footer_links]]
 label = "Source"
-href = "ssh://git@codeberg.org/caniko/hermesix.git"
+href = "ssh://git@github.com/caniko/hermesix.git"
 
 [[pages]]
 slug = "index"
@@ -29,7 +29,7 @@ subtitle = "Hermesix is a generic command line tool for managed configuration wo
 
 [[pages.sections.ctas]]
 label = "View source"
-href = "ssh://git@codeberg.org/caniko/hermesix.git"
+href = "ssh://git@github.com/caniko/hermesix.git"
 primary = true
 
 [[pages.sections]]

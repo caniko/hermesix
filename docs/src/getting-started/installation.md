@@ -20,7 +20,7 @@ Until the first crates.io release is published, install from the Codeberg
 repository:
 
 ```sh
-cargo install --git https://codeberg.org/caniko/hermesix
+cargo install --git https://github.com/caniko/hermesix
 ```
 
 After publication, the intended install command is:

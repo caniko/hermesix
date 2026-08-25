@@ -2,7 +2,7 @@
   description = "Generic managed configuration utilities";
 
   inputs = {
-    rs-harbor.url = "git+https://codeberg.org/caniko/rs-harbor.git?ref=trunk&rev=9bfa8bdb0ecb22d7bc11448665f7fbaebae7a759";
+    rs-harbor.url = "git+https://github.com/caniko/harbor-rs.git?ref=trunk&rev=05cc4f162b55fa904b687db1821e2463fa813e50";
 
     nixpkgs.follows = "rs-harbor/nixpkgs";
     rust-overlay.follows = "rs-harbor/rust-overlay";
@@ -13,7 +13,7 @@
       flake = false;
     };
     plinth = {
-      url = "git+https://codeberg.org/caniko/plinth.git?ref=refs/heads/trunk";
+      url = "git+https://github.com/caniko/plinth.git?ref=refs/heads/trunk";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-utils.follows = "flake-utils";
     };
@@ -82,7 +82,7 @@
 
               meta = {
                 description = "Generic managed configuration utilities";
-                homepage = "https://codeberg.org/caniko/hermesix";
+                homepage = "https://github.com/caniko/hermesix";
                 mainProgram = "hermesix";
                 license = lib.licenses.mit;
                 platforms = lib.platforms.unix;

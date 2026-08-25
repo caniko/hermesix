@@ -23,7 +23,7 @@ With Home Manager and the OBS Studio module:
 
 ```nix
 {
-  inputs.hermesix.url = "git+https://codeberg.org/caniko/hermesix";
+  inputs.hermesix.url = "git+https://github.com/caniko/hermesix";
 
   outputs =
     {
@@ -51,7 +51,7 @@ redaction commands.
 From source:
 
 ```sh
-cargo install --git https://codeberg.org/caniko/hermesix
+cargo install --git https://github.com/caniko/hermesix
 ```
 
 ## Commands
