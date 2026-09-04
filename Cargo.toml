@@ -19,6 +19,12 @@ include = [
   "src/**",
 ]
 
+[package.metadata.harbor-ci]
+docs = true
+audit = true
+deny = true
+package = true
+
 [[bin]]
 name = "hermesix"
 path = "src/main.rs"
