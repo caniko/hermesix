@@ -2,11 +2,12 @@
   description = "Generic managed configuration utilities";
 
   inputs = {
-    rs-harbor.url = "git+ssh://git@github.com/caniko/rs-harbor.git?ref=trunk&rev=05cc4f162b55fa904b687db1821e2463fa813e50";
+    harbor-rs.url = "git+ssh://git@github.com/caniko/harbor-rs.git?ref=trunk&rev=05cc4f162b55fa904b687db1821e2463fa813e50";
+    rs-harbor.follows = "harbor-rs";
 
-    nixpkgs.follows = "rs-harbor/nixpkgs";
-    rust-overlay.follows = "rs-harbor/rust-overlay";
-    crane.follows = "rs-harbor/crane";
+    nixpkgs.follows = "harbor-rs/nixpkgs";
+    rust-overlay.follows = "harbor-rs/rust-overlay";
+    crane.follows = "harbor-rs/crane";
     flake-utils.url = "github:numtide/flake-utils";
     advisory-db = {
       url = "github:rustsec/advisory-db";
@@ -25,7 +26,7 @@
       advisory-db,
       nixpkgs,
       plinth,
-      rs-harbor,
+      harbor-rs,
       rust-overlay,
       ...
     }:
@@ -46,8 +47,8 @@
             inherit system;
             overlays = [ (import rust-overlay) ];
           };
-          toolchain = rs-harbor.lib.mkToolchain { inherit pkgs; toolchainProfile = "nightly"; };
-          cross = rs-harbor.lib.mkCross { inherit pkgs system; };
+          toolchain = harbor-rs.lib.mkToolchain { inherit pkgs; toolchainProfile = "nightly"; };
+          cross = harbor-rs.lib.mkCross { inherit pkgs system; };
           inherit (toolchain) craneLib;
           version = "0.1.0";
           plinthProject = plinth.packages.${system}.plinth-project;
@@ -242,7 +243,7 @@
               '';
             };
 
-            docs = rs-harbor.lib.mkDocsShell {
+            docs = harbor-rs.lib.mkDocsShell {
               inherit pkgs cross;
               inherit (toolchain) craneLib;
               checks = projectChecks;
