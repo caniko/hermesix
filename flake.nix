@@ -81,7 +81,7 @@
 
               meta = {
                 description = "Generic managed configuration utilities";
-                homepage = "https://codeberg.org/caniko/hermesix";
+                homepage = "https://github.com/caniko/hermesix";
                 mainProgram = "hermesix";
                 license = lib.licenses.mit;
                 platforms = lib.platforms.unix;
@@ -139,6 +139,24 @@
             doc = docCheck;
             audit = auditCheck;
             deny = denyCheck;
+            # Fail if flake inputs ever point at the retired Codeberg/Codefloe
+            # mirrors again (fleet migrated to github.com/caniko/*).
+            # sourceUrl package metadata is excluded: informational only, not fetched.
+            host-pinning =
+              let
+                # Split across literals so this file never matches its own pattern.
+                staleHosts = "cod" + "eberg|cod" + "efloe";
+              in
+              pkgs.runCommand "hermesix-host-pinning" {} ''
+                if ${pkgs.lib.getExe pkgs.ripgrep} -v "sourceUrl" ${./flake.nix} ${./flake.lock} \
+                  | ${pkgs.lib.getExe pkgs.ripgrep} -q "${staleHosts}"; then
+                  echo "ERROR: retired forge host in flake inputs:" >&2
+                  ${pkgs.lib.getExe pkgs.ripgrep} -v "sourceUrl" ${./flake.nix} ${./flake.lock} \
+                    | ${pkgs.lib.getExe pkgs.ripgrep} -n "${staleHosts}" >&2 || true
+                  exit 1
+                fi
+                touch $out
+              '';
           };
 
           website = pkgs.stdenv.mkDerivation {
