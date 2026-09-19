@@ -31,4 +31,4 @@ top as a separate flake module to install the companion CLI:
 The Home Manager module generates OBS configuration. Hermesix provides
 export/sync/diff/validate/redact tooling for users who want those workflows.
 
-Source code is hosted at <https://codeberg.org/caniko/hermesix>.
+Source code is hosted at <https://github.com/caniko/hermesix>.
