@@ -31,7 +31,10 @@ fn main() {
     let cli = match Cli::try_parse() {
         Ok(cli) => cli,
         Err(err) => {
-            let code = if matches!(err.kind(), ErrorKind::DisplayHelp | ErrorKind::DisplayVersion) {
+            let code = if matches!(
+                err.kind(),
+                ErrorKind::DisplayHelp | ErrorKind::DisplayVersion
+            ) {
                 0
             } else {
                 2
