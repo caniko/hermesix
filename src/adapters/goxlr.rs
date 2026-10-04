@@ -146,9 +146,12 @@ fn capture(args: Capture) -> Result<()> {
     let manifest_json = serde_json::to_vec_pretty(&manifest)
         .into_diagnostic()
         .context("cannot serialize GoXLR manifest")?;
-    fs::write(&manifest_path, format!("{}\n", String::from_utf8_lossy(&manifest_json)))
-        .into_diagnostic()
-        .wrap_err_with(|| format!("cannot write {}", manifest_path.display()))?;
+    fs::write(
+        &manifest_path,
+        format!("{}\n", String::from_utf8_lossy(&manifest_json)),
+    )
+    .into_diagnostic()
+    .wrap_err_with(|| format!("cannot write {}", manifest_path.display()))?;
 
     if args.json {
         println!(
@@ -180,7 +183,10 @@ fn copy_artifact(
         bail!("GoXLR artifact is not a regular file: {}", source.display());
     }
     if !target.is_absolute() {
-        bail!("GoXLR runtime target must be absolute: {}", target.display());
+        bail!(
+            "GoXLR runtime target must be absolute: {}",
+            target.display()
+        );
     }
     if let Some(parent) = destination.parent() {
         fs::create_dir_all(parent)
