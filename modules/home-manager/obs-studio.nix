@@ -1,15 +1,12 @@
-{ self }:
-{
+{self}: {
   config,
   lib,
   pkgs,
   ...
-}:
-let
+}: let
   cfg = config.programs.obs-studio.hermesix;
   system = pkgs.stdenv.hostPlatform.system;
-in
-{
+in {
   options.programs.obs-studio.hermesix = {
     enable = lib.mkOption {
       type = lib.types.bool;
@@ -31,6 +28,6 @@ in
   };
 
   config = lib.mkIf (config.programs.obs-studio.enable && cfg.enable) {
-    home.packages = [ cfg.package ];
+    home.packages = [cfg.package];
   };
 }

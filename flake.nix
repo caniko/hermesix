@@ -2,18 +2,19 @@
   description = "Generic managed configuration utilities";
 
   inputs = {
-    harbor-rs.url = "git+https://github.com/caniko/harbor-rs.git?ref=trunk&rev=ed89d0b13fc61dd1b2217bf4bba97f32cec27ba7";
+    harbor.url = "git+https://github.com/caniko/harbor.git?ref=feat/harbor-monorepo-components&rev=e8b1996580e4ecd51dd402edf4a16d9df88e3a1b";
 
-    nixpkgs.follows = "harbor-rs/nixpkgs";
-    rust-overlay.follows = "harbor-rs/rust-overlay";
-    crane.follows = "harbor-rs/crane";
+    nixpkgs.follows = "harbor/nixpkgs";
+    rust-overlay.follows = "harbor/rust-overlay";
+    crane.follows = "harbor/crane";
+    treefmt-nix.follows = "harbor/treefmt-nix";
     flake-utils.url = "github:numtide/flake-utils";
     advisory-db = {
       url = "github:rustsec/advisory-db";
       flake = false;
     };
     plinth = {
-      url = "git+https://github.com/caniko/plinth.git?ref=refs/heads/trunk";
+      url = "git+https://github.com/caniko/plinth.git?ref=migrate/harbor-combined-20261012-features&rev=534dfa6dd6217db97b7ccd313501120a3c34d912";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -23,8 +24,9 @@
     advisory-db,
     nixpkgs,
     plinth,
-    harbor-rs,
+    harbor,
     rust-overlay,
+    treefmt-nix,
     ...
   }: let
     systems = [
@@ -33,20 +35,25 @@
       "x86_64-darwin"
       "x86_64-linux"
     ];
-    lib = nixpkgs.lib;
+    inherit (nixpkgs) lib;
     forAllSystems = lib.genAttrs systems;
 
     perSystem = forAllSystems (
       system: let
-        pkgs = import nixpkgs {
-          inherit system;
-          overlays = [(import rust-overlay)];
-        };
-        toolchain = harbor-rs.lib.mkToolchain {
+        pkgs =
+          import (
+            if system == "x86_64-darwin"
+            then harbor.inputs.nixpkgs-darwin
+            else nixpkgs
+          ) {
+            inherit system;
+            overlays = [(import rust-overlay)];
+          };
+        toolchain = harbor.lib.rust.mkToolchain {
           inherit pkgs;
           toolchainProfile = "nightly";
         };
-        cross = harbor-rs.lib.mkCross {inherit pkgs system;};
+        cross = harbor.lib.rust.mkCross {inherit pkgs system;};
         inherit (toolchain) craneLib;
         version = "0.1.0";
         plinthProject = plinth.packages.${system}.plinth-project;
@@ -84,7 +91,7 @@
               homepage = "https://github.com/caniko/hermesix";
               mainProgram = "hermesix";
               license = lib.licenses.mit;
-              platforms = lib.platforms.unix;
+              platforms = pkgs.lib.platforms.unix;
             };
           }
         );
@@ -97,7 +104,11 @@
           }
         );
 
-        fmtCheck = craneLib.cargoFmt {src = cargoSrc;};
+        treefmtEval = treefmt-nix.lib.evalModule pkgs (import ./nix/treefmt.nix {
+          rustfmtPackage = toolchain.rustToolchain;
+          edition = (builtins.fromTOML (builtins.readFile ./Cargo.toml)).package.edition;
+        });
+        fmtCheck = treefmtEval.config.build.check self;
 
         nextestCheck = craneLib.cargoNextest (
           commonArgs
@@ -125,7 +136,7 @@
 
         projectChecks = {
           default = hermesix;
-          hermesix = hermesix;
+          inherit hermesix;
           hermesix-deps = cargoArtifacts;
           hermesix-clippy = clippyCheck;
           hermesix-fmt = fmtCheck;
@@ -166,6 +177,8 @@
             fileset = lib.fileset.maybeMissing ./website;
           };
           nativeBuildInputs = [pkgs.zola];
+          # Zola initializes the data-loader client for local templates too.
+          SSL_CERT_FILE = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
           phases = [
             "buildPhase"
             "installPhase"
@@ -209,6 +222,7 @@
           docsPackage = docs;
         };
       in {
+        formatter = treefmtEval.config.build.wrapper;
         packages = {
           inherit
             docs
@@ -242,7 +256,8 @@
             checks = projectChecks;
 
             packages = [
-              harbor-rs.packages.${system}.harbor-ci
+              treefmtEval.config.build.wrapper
+              harbor.packages.${system}.rust-harbor-ci
               pkgs.cargo-audit
               pkgs.cargo-deny
               pkgs.cargo-nextest
@@ -258,7 +273,7 @@
             '';
           };
 
-          docs = harbor-rs.lib.mkDocsShell {
+          docs = harbor.lib.rust.mkDocsShell {
             inherit pkgs cross;
             inherit (toolchain) craneLib;
             checks = projectChecks;
@@ -280,6 +295,7 @@
     apps = lib.mapAttrs (_: value: value.apps) perSystem;
     checks = lib.mapAttrs (_: value: value.checks) perSystem;
     devShells = lib.mapAttrs (_: value: value.devShells) perSystem;
+    formatter = lib.mapAttrs (_: value: value.formatter) perSystem;
     homeManagerModules = rec {
       obs-studio = import ./modules/home-manager/obs-studio.nix {inherit self;};
       default = obs-studio;
