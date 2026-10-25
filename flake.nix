@@ -219,21 +219,38 @@
           site = projectSite;
         };
 
-        apps = {
-          default = {
-            type = "app";
-            program = lib.getExe hermesix;
-            meta.description = "Run Hermesix";
+        apps =
+          {
+            default = {
+              type = "app";
+              program = lib.getExe hermesix;
+              meta.description = "Run Hermesix";
+            };
+            hermesix = {
+              type = "app";
+              program = lib.getExe hermesix;
+              meta.description = "Run Hermesix";
+            };
+            deploy-pages = plinth.lib.${system}.mkDeployPagesApp {
+              domain = "hermesix.tartanoglu.com";
+            };
+          }
+          // lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
+            # Simit prebuild publication on trunk (secret ATTIC_TOKEN). Linux
+            # outputs only: darwin builds never reach the public canix cache.
+            push-flake-inputs = harbor-rs.lib.mkAtticPush {
+              inherit pkgs;
+              flake = ".";
+              paths = [hermesix];
+              adapter = harbor-rs.lib.mkAdapter {
+                attic = {
+                  endpoint = "https://attic.candee.baby";
+                  cache = "canix";
+                  tokenEnvVar = "ATTIC_TOKEN";
+                };
+              };
+            };
           };
-          hermesix = {
-            type = "app";
-            program = lib.getExe hermesix;
-            meta.description = "Run Hermesix";
-          };
-          deploy-pages = plinth.lib.${system}.mkDeployPagesApp {
-            domain = "hermesix.tartanoglu.com";
-          };
-        };
 
         checks = projectChecks;
 
