@@ -25,7 +25,7 @@ comparison and redaction logic.
   paths, and `..` components.
 - Redaction is the default, not an option. Sensitive names, runtime fields, and
   local absolute paths are removed unless the caller explicitly asks for them,
-  and the same flags apply to `redact`, `validate`, and adapter exports.
+  and the same flags apply to `redact`, `validate`, and the OBS export.
 - Keep the core generic. Adapter-specific behaviour stays under `adapters`, so
   the diff/sync/validate/redact engine has no OBS or audio-interface concepts.
 - Layered, not replacing: Home Manager still owns the declarative OBS Studio
@@ -38,8 +38,8 @@ comparison and redaction logic.
 
 The `diff`, `sync`, `validate`, and `redact` commands over JSON and INI files;
 the versioned manifest format; the OBS Studio adapter (export-to-Nix and plugin
-inspection) with its plugin schemas; the Home Manager `obs-studio` module; the
-Nix package and docs site.
+inspection); the GoXLR capture adapter; the Home Manager `obs-studio` module;
+the Nix package and docs site.
 
 ## Non-goals
 
@@ -49,8 +49,8 @@ try to infer arbitrary application semantics outside its adapters.
 
 ## Direction
 
-The published 0.1.0 release candidate covers the manifest engine, redaction, and
-the OBS Studio adapter. No roadmap beyond that release is documented.
+The 0.1.0 release candidate covers the manifest engine, redaction, and the OBS
+Studio adapter. No roadmap beyond that release is documented.
 
 ## Place in the fleet
 
