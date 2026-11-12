@@ -1,46 +1,88 @@
 [site]
 title = "Hermesix"
-description = "Hermesix is a generic command line tool for managed configuration workflows."
+description = "A CLI that works from a versioned manifest of each file's source, target, hash and kind, so generated config trees can be compared, moved and redacted without hand-copying."
 base_url = "/"
-footer_note = "Generated from repository metadata by the plinth-project FOSS sweep."
 
 [[nav]]
 label = "Overview"
 href = "#overview"
 
 [[nav]]
+label = "Install"
+href = "#install"
+
+[[nav]]
+label = "Documentation"
+href = "/docs/"
+
+[[nav]]
 label = "Source"
-href = "ssh://git@github.com/caniko/hermesix.git"
+href = "https://github.com/caniko/hermesix"
+
+[[footer_links]]
+label = "Documentation"
+href = "/docs/"
 
 [[footer_links]]
 label = "Source"
-href = "ssh://git@github.com/caniko/hermesix.git"
+href = "https://github.com/caniko/hermesix"
 
 [[pages]]
 slug = "index"
 title = "Hermesix"
-description = "Hermesix is a generic command line tool for managed configuration workflows."
+description = "A CLI that works from a versioned manifest of each file's source, target, hash and kind, so generated config trees can be compared, moved and redacted without hand-copying."
 
 [[pages.sections]]
 type = "hero"
 title = "Hermesix"
-tagline = "Hermesix is a generic command line tool for managed configuration workflows."
-subtitle = "Hermesix is a generic command line tool for managed configuration workflows."
+tagline = "Diff, sync and redact generated configuration safely."
+subtitle = "A CLI that works from a versioned manifest of each file's source, target, hash and kind, so generated config trees can be compared, moved and redacted without hand-copying."
 
 [[pages.sections.ctas]]
 label = "View source"
-href = "ssh://git@github.com/caniko/hermesix.git"
+href = "https://github.com/caniko/hermesix"
 primary = true
+
+[[pages.sections.ctas]]
+label = "Read the documentation"
+href = "/docs/"
 
 [[pages.sections]]
 type = "feature_grid"
 id = "overview"
 
 [[pages.sections.features]]
-title = "Rust"
-description = "Project technology detected from repository manifests."
+title = "The manifest is the contract"
+description = "A versioned manifest records each file's source, target, SHA-256, kind and origin, so diff, sync and validate work from recorded facts instead of whatever happens to be on disk."
 
 [[pages.sections.features]]
-title = "Nix"
-description = "Project technology detected from repository manifests."
+title = "Hash-checked writes"
+description = "sync --apply verifies source hashes before writing, and validation rejects unsupported manifest versions, empty module names, absolute managed paths and parent-directory components."
 
+[[pages.sections.features]]
+title = "Redaction by default"
+description = "Sensitive names, runtime fields and absolute local paths are removed unless the caller explicitly asks for them, and the same flags govern redact, validate and the OBS export."
+
+[[pages.sections.features]]
+title = "Adapters keep the core generic"
+description = "Application knowledge stays under adapters: OBS Studio ships export-to-Nix and plugin inspection, while a GoXLR capture adapter copies the live Utility tree into a deterministic source tree."
+
+[[pages.sections]]
+type = "install"
+id = "install"
+heading = "Install"
+intro = "Run the CLI straight from the flake, or build it from source. Home Manager still owns the declarative application module; Hermesix adds the companion tooling beside it."
+guide_href = "/docs/"
+
+[[pages.sections.primary_routes]]
+label = "nix run"
+audience = "Any machine with Nix flakes enabled"
+command = "nix run github:caniko/hermesix -- --help"
+href = "/docs/getting-started/quick-start.html"
+recommended = true
+
+[[pages.sections.secondary_routes]]
+label = "From source"
+audience = "A Rust toolchain and the repository"
+command = "cargo install --git https://github.com/caniko/hermesix"
+href = "/docs/getting-started/installation.html"

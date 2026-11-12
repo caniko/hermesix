@@ -5,13 +5,13 @@
 Run Hermesix directly from the flake:
 
 ```sh
-nix run codeberg:caniko/hermesix -- --help
+nix run github:caniko/hermesix -- --help
 ```
 
 Install it into a profile:
 
 ```sh
-nix profile install codeberg:caniko/hermesix
+nix profile install github:caniko/hermesix
 ```
 
 ## Cargo
