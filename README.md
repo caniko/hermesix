@@ -16,7 +16,7 @@ first adapter.
 With Nix:
 
 ```sh
-nix run codeberg:caniko/hermesix -- --help
+nix run github:caniko/hermesix -- --help
 ```
 
 With Home Manager and the OBS Studio module:
