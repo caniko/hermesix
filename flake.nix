@@ -171,6 +171,7 @@
             "installPhase"
           ];
           buildPhase = ''
+            export SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt
             cp -r --no-preserve=mode $src/website site
             cd site
             zola build
